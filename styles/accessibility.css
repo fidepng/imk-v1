@@ -1,0 +1,100 @@
+/* accessibility.css */
+
+/* Mode gelap */
+.dark-mode {
+    background-color: #212529;
+    color: #e9ecef;
+  }
+  
+  .dark-mode .menu-card {
+    background-color: #343a40;
+    color: #f8f9fa;
+  }
+  
+  .dark-mode .menu-card-title {
+    color: #80bdff;
+  }
+  
+  /* Panel aksesibilitas */
+  #accessibilityPanel {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: #007bff;
+    color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+  }
+  
+/* accessibility.css (lanjutan) */
+
+#accessibilityPanel button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 5px;
+    background-color: #0056b3;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  #accessibilityPanel button:hover {
+    background-color: #003d80;
+  }
+  
+  #accessibilityPanel button svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+  
+  /* Gaya untuk elemen yang dapat dibaca (Text-to-Speech) */
+  [data-speak] {
+    cursor: pointer;
+    position: relative;
+  }
+  
+  [data-speak]::after {
+    content: '🔊';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  [data-speak]:hover::after {
+    opacity: 1;
+  }
+  
+  /* Gaya untuk keyboard navigation */
+  :focus {
+    outline: 3px solid #007bff;
+    outline-offset: 3px;
+  }
+  
+  /* Animasi loading untuk konten yang lambat */
+  .lazy-load {
+    opacity: 0;
+    transition: opacity 1s;
+  }
+  
+  .lazy-load.loaded {
+    opacity: 1;
+  }
+  
+  /* Gaya untuk mode disleksia-ramah */
+  .dyslexia-friendly {
+    font-family: 'OpenDyslexic', 'Arial', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    letter-spacing: 0.05rem;
+    word-spacing: 0.1rem;
+  }

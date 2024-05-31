@@ -1,0 +1,54 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #48494a;
+    background-image: url('/assets/body-bg.jpg');
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+  }
+  
+  .home-container {
+    height: 100%;
+  }
+  
+  .text-container {
+    text-align: center;
+  }
+  
+  button {
+    cursor: pointer;
+    font-weight: 700;
+    transition: all .2s;
+    padding: 10px 20px;
+    border-radius: 100px;
+    background: #cfef00;
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+  }
+
+  .button-link {
+    text-decoration: none;
+  }
+  
+  button:hover {
+    background: #c4e201;
+  }
+  
+  button > svg {
+    width: 34px;
+    margin-left: 10px;
+    transition: transform .3s ease-in-out;
+  }
+  
+  button:hover svg {
+    transform: translateX(5px);
+  }
+  
+  button:active {
+    transform: scale(0.95);
+  }
+  
+  
+  

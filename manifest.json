@@ -1,0 +1,28 @@
+{
+    "name": "anya",
+    "short_name": "anya",
+    "start_url": "/imk-v1/",
+    "id": "/imk-v1/",
+    "scope": "/imk-v1/",
+    "display": "standalone",
+    "background_color": "#F0F8FF",
+    "theme_color": "#007bff",
+    "icons": [
+      {
+        "src": "/assets/icon-192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/assets/icon-512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      },
+      {
+        "src": "asset/maskable-icon.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "maskable"
+      }
+    ]
+  }

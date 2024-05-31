@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Utama</title>
+  <link href="/assets/bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/sidebar.css">
+  <link rel="stylesheet" href="/styles/menu.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Tombol Setting dengan Ikon Hamburger -->
+  <label class="setting-btn" aria-label="Buka menu pengaturan">
+    <input type="checkbox" id="menu-toggle" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings" aria-hidden="true">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+  </label>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar" aria-label="Menu navigasi">
+    <!-- Konten sidebar di sini -->
+  </div>
+  
+  <div class="content-wrapper">
+    <div class="menu-container">
+      <h1 class="title">Pilih Subjek</h1>
+      <div class="menu-grid">
+        <a href="/pages/math-quiz.html" class="menu-card" aria-label="Kuis Matematika">
+          <div class="card-image-container">
+            <img src="/assets/blurry-gradient-haikei.svg" alt="Matematika" class="card-image">
+          </div>
+          <div class="menu-card-body">
+            <h5 class="menu-card-title">Matematika</h5>
+            <p class="menu-card-text">Kuis matematika sederhana untuk anak-anak sekolah dasar.</p>
+          </div>
+        </a>
+        <a href="/pages/general-knowledge-quiz.html" class="menu-card" aria-label="Kuis Pengetahuan Umum">
+          <div class="card-image-container">
+            <img src="/assets/blurry-gradient-haikei.svg" alt="Pengetahuan Umum" class="card-image">
+          </div>
+          <div class="menu-card-body">
+            <h5 class="menu-card-title">Pengetahuan Umum</h5>
+            <p class="menu-card-text">Tebak gambar dan jawab pertanyaan pengetahuan umum.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/scripts/sidebar.js"></script>
+</body>
+</html>

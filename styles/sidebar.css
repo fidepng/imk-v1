@@ -1,0 +1,73 @@
+/* Gaya untuk tombol setting dengan ikon pengaturan */
+.setting-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    cursor: pointer;
+}
+
+.setting-btn input {
+    display: none;
+}
+
+.setting-btn img {
+    height: 3em;
+    transition: transform 0.3s ease;
+}
+
+.setting-btn input:checked + img {
+    transform: rotate(-180deg);
+}
+.setting-btn svg {
+    height: 3em;
+    transition: transform 0.3s ease;
+}
+
+.setting-btn input:checked + svg {
+    transform: rotate(-180deg);
+}
+
+/* Gaya untuk sidebar */
+/* ... (Tidak ada perubahan pada bagian ini) */
+
+/* Gaya untuk sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100vh;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 998;
+    transition: right 0.3s ease;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.sidebar.show {
+    right: 0;
+}
+
+/* Gaya untuk tampilan mobile */
+@media (max-width: 767px) {
+    .sidebar {
+      width: 250px;
+    }
+}
+
+/* Gaya untuk wrapper konten halaman */
+.content-wrapper {
+    transition: transform 0.3s ease;
+  }
+  
+  .content-wrapper.shift-left {
+    transform: translateX(-300px);
+  }
+
