@@ -25,38 +25,48 @@ const cacheFiles = [
   '/imk-v1/assets/maskable-icon.png',
 ];
 
-// Instal service worker
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(cacheName)
-      .then((cache) => cache.addAll(cacheFiles))
-  );
-});
-
-// Aktifkan service worker
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== cacheName) {
-            return caches.delete(cache);
-          }
-        })
-      );
-    })
-  );
-});
-
-// Tangani permintaan sumber daya
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
+    event.waitUntil(
+      caches.open(cacheName)
+        .then((cache) => cache.addAll(staticRoutes.map((route) => `${self.registration.scope}${route}`)))
+    );
+  });
+  
+  self.addEventListener('activate', (event) => {
+    event.waitUntil(
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames
+            .filter((cacheName) => cacheName !== staticCacheName)
+            .map((cacheName) => caches.delete(cacheName))
+        );
       })
-  );
-});
+    );
+  });
+  
+  self.addEventListener('fetch', (event) => {
+    event.respondWith(
+      caches.match(event.request)
+        .then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+  
+          return fetch(event.request)
+            .then((networkResponse) => {
+              const responseToCache = networkResponse.clone();
+  
+              caches.open(cacheName)
+                .then((cache) => {
+                  cache.put(event.request, responseToCache);
+                });
+  
+              return networkResponse;
+            })
+            .catch(() => {
+              // Jika jaringan tidak tersedia, gunakan file yang di-cache
+              return caches.match('/offline.html');
+            });
+        })
+    );
+  });
