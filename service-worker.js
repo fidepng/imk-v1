@@ -63,10 +63,10 @@ self.addEventListener('install', (event) => {
   
               return networkResponse;
             })
-            .catch(() => {
-              // Jika jaringan tidak tersedia, gunakan file yang di-cache
-              return caches.match('/offline.html');
-            });
+            // .catch(() => {
+            //   // Jika jaringan tidak tersedia, gunakan file yang di-cache
+            //   return caches.match('/offline.html');
+            // });
         })
     );
   });
