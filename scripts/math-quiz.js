@@ -31,16 +31,6 @@ const questions = [
     ]
   },
   {
-    question: "Berapa hasil dari {0} + {1} + {2}?",
-    answerOperands: [2, 3, 4],
-    answers: [
-      { text: 7, correct: false },
-      { text: 8, correct: false },
-      { text: 9, correct: true },
-      { text: 10, correct: false }
-    ]
-  },
-  {
     question: "Berapa hasil dari {0} - {1} × {2}?",
     answerOperands: [20, 3, 4],
     answers: [
@@ -48,16 +38,6 @@ const questions = [
       { text: 10, correct: false },
       { text: 12, correct: false },
       { text: 14, correct: false }
-    ]
-  },
-  {
-    question: "Berapa hasil dari {0} - {1} + {2}?",
-    answerOperands: [5, 2, 2],
-    answers: [
-      { text: 3, correct: false },
-      { text: 5, correct: true },
-      { text: 4, correct: false },
-      { text: 6, correct: false }
     ]
   },
   {
@@ -138,7 +118,7 @@ function displayQuestionNumbers() {
   container.innerHTML = "";
 
   const isMobile = window.matchMedia("(max-width: 767px)").matches;
-  const maxButtonsPerRow = isMobile ? 5 : 10;
+  const maxButtonsPerRow = isMobile ? 4 : 8;
 
   const totalRows = Math.ceil(questions.length / maxButtonsPerRow);
   for (let row = 0; row < totalRows; row++) {
@@ -165,6 +145,7 @@ function displayQuestionNumbers() {
     container.appendChild(rowDiv);
   }
 }
+
 function goToQuestion(index) {
   if (index !== currentQuestionIndex) {
     stopTimer();

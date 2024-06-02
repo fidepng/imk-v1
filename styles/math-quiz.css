@@ -133,10 +133,6 @@ h1 {
   color: #6c757d;
 }
 
-.question-number-container {
-  max-width: 100%;
-  width: 100%;
-}
 
 #question-number {
   display: flex;
@@ -244,15 +240,6 @@ h1 {
 }
 
 /* Gaya dasar untuk tombol navigasi */
-.nav-btn-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 500px;
-  width: 100%;
-  margin: 0 auto;
-}
-
 .nav-btn {
   font-weight: 600;
   padding: 0.75rem 1.5rem;
