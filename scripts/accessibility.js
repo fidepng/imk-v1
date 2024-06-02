@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('sidebar');
   
     // Load sidebar content
-    fetch('/components/sidebar.html')
+    fetch('/imk-v1/components/sidebar.html')
       .then(response => response.text())
       .then(html => {
         sidebar.innerHTML = html;

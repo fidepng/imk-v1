@@ -1,0 +1,112 @@
+/* dark-mode.css */
+body.dark-mode {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+    background-image: url('/imk-v1/assets/body-bg-dark.jpg');
+  }
+  
+  .dark-mode .quiz-card {
+    background-color: rgba(40, 40, 40, 0.9);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  }
+  
+  .dark-mode .question-box {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .dark-mode #answer-options .btn {
+    background-color: #333;
+    color: #fff;
+    border-color: #4a4a4a;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .dark-mode #answer-options .btn:hover {
+    border-color: #007bff;
+  }
+  
+  .dark-mode .speech-bubble {
+    background: #333;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .dark-mode .speech-bubble:after {
+    border-right-color: #333;
+  }
+  
+  .dark-mode .progress {
+    background-color: #333;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+  
+  .dark-mode .progress-bar {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  }
+  
+  .dark-mode .progress-text {
+    color: #adb5bd;
+  }
+  
+  .dark-mode .modal-content {
+    background-color: #333;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  .dark-mode .modal-title {
+    color: #fff;
+  }
+  
+  .dark-mode #finalScore {
+    color: #4facfe;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  .dark-mode #finalMessage {
+    color: #adb5bd;
+  }
+  
+  .dark-mode .btn-secondary {
+    background-color: #495057;
+    border-color: #495057;
+  }
+  
+  .dark-mode .btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+  }
+  
+  .dark-mode .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .dark-mode .btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+  }
+  
+  .dark-mode .timer-bar {
+    background-color: #444;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  .dark-mode .timer-bar .progress-bar {
+    background-color: #e67e22;
+  }
+  
+  .dark-mode #leaderboardList li {
+    background-color: #444;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    color: #e0e0e0;
+  }
+  
+  .dark-mode #leaderboardList li:hover {
+    background-color: #555;
+  }
+  
+  .dark-mode #leaderboardList li::before {
+    color: #4facfe;
+  }

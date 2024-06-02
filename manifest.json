@@ -5,8 +5,8 @@
     "id": "/imk-v1/",
     "scope": "/imk-v1/",
     "display": "standalone",
-    "background_color": "#F0F8FF",
-    "theme_color": "#007bff",
+    "background_color": "#FFFFFF",
+    "theme_color": "#FFFFFF",
     "icons": [
       {
         "src": "/imk-v1/assets/icon-192.png",

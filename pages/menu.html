@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Menu Utama</title>
   <link href="/imk-v1/assets/bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/imk-v1/styles/sidebar.css">
   <link rel="stylesheet" href="/imk-v1/styles/menu.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +12,7 @@
   <link rel="manifest" href="/imk-v1/manifest.json">
 </head>
 <body>
-  <!-- Tombol Setting dengan Ikon Hamburger -->
+  <!-- Tombol Setting dengan Ikon setting -->
   <label class="setting-btn" aria-label="Buka menu pengaturan">
     <input type="checkbox" id="menu-toggle" aria-hidden="true">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings" aria-hidden="true">
@@ -22,11 +21,6 @@
     </svg>
   </label>
 
-  <!-- Sidebar -->
-  <div id="sidebar" class="sidebar" aria-label="Menu navigasi">
-    <!-- Konten sidebar di sini -->
-  </div>
-  
   <div class="content-wrapper">
     <div class="menu-container">
       <h1 class="title">Pilih Subjek</h1>
@@ -40,7 +34,7 @@
             <p class="menu-card-text">Kuis matematika sederhana untuk anak-anak sekolah dasar.</p>
           </div>
         </a>
-        <a href="/imk-v1/pages/general-knowledge-quiz.html" class="menu-card" aria-label="Kuis Pengetahuan Umum">
+        <a href="/imk-v1/pages/common-knowledge-quiz.html" class="menu-card" aria-label="Kuis Pengetahuan Umum">
           <div class="card-image-container">
             <img src="/imk-v1/assets/blurry-gradient-haikei.svg" alt="Pengetahuan Umum" class="card-image">
           </div>
@@ -54,6 +48,5 @@
   </div>
 
   <script src="/imk-v1/assets/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/imk-v1/scripts/sidebar.js"></script>
 </body>
 </html>
