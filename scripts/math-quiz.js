@@ -1,16 +1,6 @@
 // math-quiz.js
 const questions = [
   {
-    question: "Berapa hasil dari {0} + {1}?",
-    answerOperands: [5, 3],
-    answers: [
-      { text: 8, correct: true },
-      { text: 6, correct: false },
-      { text: 10, correct: false },
-      { text: 7, correct: false }
-    ]
-  },
-  {
     question: "Berapa hasil dari {0} - {1}?",
     answerOperands: [12, 7],
     answers: [
@@ -51,6 +41,16 @@ const questions = [
     ]
   },
   {
+    question: "Berapa hasil dari {0} - {1} × {2}?",
+    answerOperands: [20, 3, 4],
+    answers: [
+      { text: 8, correct: true },
+      { text: 10, correct: false },
+      { text: 12, correct: false },
+      { text: 14, correct: false }
+    ]
+  },
+  {
     question: "Berapa hasil dari {0} - {1} + {2}?",
     answerOperands: [5, 2, 2],
     answers: [
@@ -61,6 +61,16 @@ const questions = [
     ]
   },
   {
+    question: "Berapa hasil dari {0} + {1} - {2}?",
+    answerOperands: [15, 7, 9],
+    answers: [
+      { text: 11, correct: false },
+      { text: 13, correct: true },
+      { text: 15, correct: false },
+      { text: 17, correct: false }
+    ]
+  },
+  {
     question: "Berapa hasil dari {0} + {1}?",
     answerOperands: [9, 7],
     answers: [
@@ -68,6 +78,16 @@ const questions = [
       { text: 15, correct: false },
       { text: 14, correct: false },
       { text: 17, correct: false }
+    ]
+  },
+  {
+    question: "Berapa hasil dari {0} ÷ {1} × {2}?",
+    answerOperands: [18, 3, 2],
+    answers: [
+      { text: 6, correct: false },
+      { text: 8, correct: false },
+      { text: 10, correct: false },
+      { text: 12, correct: true }
     ]
   },
   {
@@ -116,21 +136,35 @@ function generateQuestion() {
 function displayQuestionNumbers() {
   const container = document.getElementById("question-number");
   container.innerHTML = "";
-  questions.forEach((_, index) => {
-    const navBtn = document.createElement("div");
-    navBtn.textContent = index + 1;
-    navBtn.classList.add("question-nav");
-    if (answeredQuestions[index]) {
-      navBtn.classList.add("answered");
-    }
-    if (index === currentQuestionIndex) {
-      navBtn.classList.add("current");
-    }
-    navBtn.addEventListener("click", () => goToQuestion(index));
-    container.appendChild(navBtn);
-  });
-}
 
+  const isMobile = window.matchMedia("(max-width: 767px)").matches;
+  const maxButtonsPerRow = isMobile ? 5 : 10;
+
+  const totalRows = Math.ceil(questions.length / maxButtonsPerRow);
+  for (let row = 0; row < totalRows; row++) {
+    const rowDiv = document.createElement("div");
+    rowDiv.classList.add("question-nav-row");
+
+    const startIndex = row * maxButtonsPerRow;
+    const endIndex = Math.min(startIndex + maxButtonsPerRow, questions.length);
+
+    for (let i = startIndex; i < endIndex; i++) {
+      const navBtn = document.createElement("div");
+      navBtn.textContent = i + 1;
+      navBtn.classList.add("question-nav");
+      if (answeredQuestions[i]) {
+        navBtn.classList.add("answered");
+      }
+      if (i === currentQuestionIndex) {
+        navBtn.classList.add("current");
+      }
+      navBtn.addEventListener("click", () => goToQuestion(i));
+      rowDiv.appendChild(navBtn);
+    }
+
+    container.appendChild(rowDiv);
+  }
+}
 function goToQuestion(index) {
   if (index !== currentQuestionIndex) {
     stopTimer();
