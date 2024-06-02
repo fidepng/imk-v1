@@ -55,9 +55,29 @@ const questions = [
     answerOperands: [5, 2, 2],
     answers: [
       { text: 3, correct: false },
-      { text: 4, correct: false },
       { text: 5, correct: true },
+      { text: 4, correct: false },
       { text: 6, correct: false }
+    ]
+  },
+  {
+    question: "Berapa hasil dari {0} + {1}?",
+    answerOperands: [9, 7],
+    answers: [
+      { text: 16, correct: true },
+      { text: 15, correct: false },
+      { text: 14, correct: false },
+      { text: 17, correct: false }
+    ]
+  },
+  {
+    question: "Berapa hasil dari {0} x {1}?",
+    answerOperands: [10, 2],
+    answers: [
+      { text: 15, correct: false },
+      { text: 21, correct: false },
+      { text: 23, correct: false },
+      { text: 20, correct: true }
     ]
   }
 ];

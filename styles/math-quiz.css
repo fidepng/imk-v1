@@ -54,10 +54,11 @@ h1 {
   font-size: 1.6rem;
   font-weight: 600;
   color: #fff;
-  line-height: 1.4;
+  line-height: 1.1;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
   text-align: center; /* Tetap center */
   padding: 1.25rem; /* Menambah padding agar teks tidak terlalu dekat dengan tepi */
+  margin: 0;
 }
 
 #answer-options .btn {
@@ -291,7 +292,8 @@ h1 {
 
   .question-text {
     font-size: 1.3rem;
-    padding: 1rem;
+    padding: auto 0.5rem auto;
+    margin: 0;
   }
   
   #answer-options .btn {
