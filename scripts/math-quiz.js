@@ -86,12 +86,6 @@ let currentQuestionIndex = 0;
 let score = 0;
 let answeredQuestions = new Array(questions.length).fill(false);
 let selectedAnswers = new Array(questions.length).fill(null);
-let timerTimeout;
-let timerDuration = 10000; // 10 detik
-let timerInterval;
-let isPaused = false;
-let remainingTime = timerDuration;
-let remainingTimes = new Array(questions.length).fill(timerDuration);
 
 const questionContainer = document.getElementById("question-container");
 const answerOptions = document.getElementById("answer-options");
@@ -99,18 +93,70 @@ const prevBtn = document.getElementById("prev-btn");
 const nextBtn = document.getElementById("next-btn");
 const scoreModal = new bootstrap.Modal(document.getElementById("scoreModal"));
 
-function generateQuestion() {
-  const question = questions[currentQuestionIndex];
-  const questionText = question.question.replace(/\{(\d+)\}/g, (_, number) => {
-    const index = parseInt(number, 10);
-    return question.answerOperands[index] ?? _;
+const questionTimers = {}; // Objek untuk menyimpan timer setiap pertanyaan
+
+// Fungsi Utama
+document.addEventListener("DOMContentLoaded", init);
+
+function init() {
+  displayQuestion();
+  displayQuestionNumbers();
+  initEventListeners();
+  startLoading();
+}
+
+function startLoading() {
+  document.body.insertAdjacentHTML('afterbegin', '<div class="loading"></div>');
+  setTimeout(() => {
+    document.querySelector('.loading').remove();
+    initTimer(currentQuestionIndex);
+  }, 1500);
+}
+
+function initEventListeners() {
+  prevBtn.addEventListener("click", showPreviousQuestion);
+  nextBtn.addEventListener("click", () => currentQuestionIndex === questions.length - 1 ? handleFinishClick() : showNextQuestion());
+  document.querySelector('.modal-footer .btn-primary').addEventListener('click', restartQuiz);
+  [prevBtn, nextBtn].forEach(btn => btn.addEventListener('click', removeWarning));
+}
+
+// Fungsi Tampilan
+function displayQuestion() {
+  const currentQuestion = generateQuestion();
+  questionContainer.innerHTML = `<p class="question-text">${currentQuestion.question}</p>`;
+
+  answerOptions.innerHTML = "";
+  currentQuestion.answers.forEach((answer, index) => {
+    const answerBtn = document.createElement("button");
+    answerBtn.textContent = answer.text;
+    answerBtn.classList.add("btn", "btn-lg", "answer-btn");
+    answerBtn.dataset.correct = answer.correct;
+    answerBtn.dataset.index = index;
+    answerBtn.addEventListener("click", selectAnswer);
+    answerOptions.appendChild(answerBtn);
+
+    if (selectedAnswers[currentQuestionIndex] !== null || answeredQuestions[currentQuestionIndex]) {
+      const selectedIndex = selectedAnswers[currentQuestionIndex];
+      if (index === selectedIndex || answer.correct) {
+        answerBtn.classList.add(answer.correct ? "correct" : "incorrect");
+      }
+      answerBtn.disabled = true;
+    }
   });
 
-  return {
-    question: questionText,
-    answers: question.answers,
-    operands: question.answerOperands
-  };
+  updateButtons();
+
+  if (answeredQuestions[currentQuestionIndex]) {
+    stopTimer(currentQuestionIndex);
+    const timerBar = document.querySelector('.timer-bar');
+    timerBar.style.width = '100%';
+    timerBar.classList.remove('timer-animation');
+  } else {
+    initTimer(currentQuestionIndex);
+  }
+
+  questionContainer.classList.add("fade-in");
+  setTimeout(() => questionContainer.classList.remove("fade-in"), 500);
 }
 
 function displayQuestionNumbers() {
@@ -146,69 +192,88 @@ function displayQuestionNumbers() {
   }
 }
 
-function goToQuestion(index) {
-  if (index !== currentQuestionIndex) {
-    stopTimer();
-    currentQuestionIndex = index;
-    displayQuestion();
-    displayQuestionNumbers();
+function showWarning(message) {
+  removeWarning();
+  const warningDiv = document.createElement('div');
+  warningDiv.id = 'warningAlert';
+  warningDiv.innerHTML = `
+    <div class="alert alert-warning" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
+      <span class="warning-message">${message}</span>
+    </div>
+  `;
+  document.querySelector('.math-quiz-container').prepend(warningDiv);
+
+  setTimeout(() => {
+    warningDiv.classList.add('fade-in');
+  }, 50);
+
+  setTimeout(removeWarning, 5000);
+}
+
+function removeWarning() {
+  const warningDiv = document.getElementById('warningAlert');
+  if (warningDiv) {
+    warningDiv.classList.add('fade-out');
+    setTimeout(() => {
+      warningDiv.remove();
+    }, 300);
   }
 }
 
-function displayQuestion() {
-  const currentQuestion = generateQuestion();
-  questionContainer.innerHTML = `<p class="question-text">${currentQuestion.question}</p>`;
+function showFinalScore() {
+  const finalScoreElement = document.getElementById("finalScore");
+  const finalMessageElement = document.getElementById("finalMessage");
+  const trophyImage = document.querySelector(".trophy-image");
 
-  answerOptions.innerHTML = "";
-  currentQuestion.answers.forEach((answer, index) => {
-    const answerBtn = document.createElement("button");
-    answerBtn.textContent = answer.text;
-    answerBtn.classList.add("btn", "btn-lg", "answer-btn");
-    answerBtn.dataset.correct = answer.correct;
-    answerBtn.dataset.index = index;
-    answerBtn.addEventListener("click", selectAnswer);
-    answerOptions.appendChild(answerBtn);
+  finalScoreElement.textContent = `${score} / ${questions.length}`;
 
-    if (selectedAnswers[currentQuestionIndex] !== null || answeredQuestions[currentQuestionIndex]) {
-      const selectedIndex = selectedAnswers[currentQuestionIndex];
-      if (index === selectedIndex || answer.correct) {
-        answerBtn.classList.add(answer.correct ? "correct" : "incorrect");
-      }
-      answerBtn.disabled = true;
-    }
+  let message = "";
+  const percentage = (score / questions.length) * 100;
+  if (percentage === 100) {
+    message = "Sempurna! Kamu jenius matematika! 🌟";
+  } else if (percentage >= 80) {
+    message = "Luar biasa! Terus berlatih ya! 😄";
+  } else if (percentage >= 60) {
+    message = "Bagus! Kamu sudah hampir menguasainya! 👍";
+  } else {
+    message = "Jangan menyerah, terus belajar! 💪";
+  }
+  trophyImage.src = "/imk-v1/assets/gold-trophy.svg";
+
+  finalMessageElement.textContent = message;
+  playSound("finish");
+  scoreModal.show();
+}
+
+// Fungsi Logika
+function generateQuestion() {
+  const question = questions[currentQuestionIndex];
+  const questionText = question.question.replace(/\{(\d+)\}/g, (_, number) => {
+    const index = parseInt(number, 10);
+    return question.answerOperands[index] ?? _;
   });
 
-  displayQuestionNumbers();
-  updateButtons();
-
-  if (answeredQuestions[currentQuestionIndex]) {
-    stopTimer();
-    const timerBar = document.querySelector('.timer-bar');
-    const progress = (remainingTimes[currentQuestionIndex] / timerDuration) * 100;
-    timerBar.style.width = `${progress}%`;
-  } else {
-    resetTimer();
-    startTimer();
-  }
-
-  questionContainer.classList.add("fade-in");
-  setTimeout(() => questionContainer.classList.remove("fade-in"), 500);
+  return {
+    question: questionText,
+    answers: question.answers,
+    operands: question.answerOperands
+  };
 }
 
 function selectAnswer(event) {
   const selectedBtn = event.target;
   const isCorrect = selectedBtn.dataset.correct === "true";
-  const selectedIndex = parseInt(selectedBtn.dataset.index, 10);
 
   Array.from(answerOptions.children).forEach(btn => {
-    btn.classList.remove("correct", "incorrect");
+    btn.classList.remove("correct", "incorrect", "selected");
     btn.disabled = true;
     if (btn.dataset.correct === "true") {
       btn.classList.add("correct");
     }
   });
 
-  selectedBtn.classList.add(isCorrect ? "correct" : "incorrect");
+  selectedBtn.classList.add(isCorrect ? "correct" : "incorrect", "selected");
 
   if (isCorrect) {
     score++;
@@ -217,90 +282,172 @@ function selectAnswer(event) {
     playSound("incorrect");
   }
 
+  selectedAnswers[currentQuestionIndex] = parseInt(selectedBtn.dataset.index, 10);
   answeredQuestions[currentQuestionIndex] = true;
-  selectedAnswers[currentQuestionIndex] = selectedIndex;
   updateButtons();
   displayQuestionNumbers();
-  stopTimer(); // Hanya menghentikan timer tanpa mereset ke ukuran awal
+  stopTimer(currentQuestionIndex);
+  removeWarning();
+
+  if (currentQuestionIndex === questions.length - 1 && answeredQuestions[currentQuestionIndex]) {
+    nextBtn.focus();
+  } else {
+    nextBtn.disabled = false;
+    nextBtn.focus();
+  }
+}
+
+function allQuestionsAnswered() {
+  return answeredQuestions.every(answered => answered);
 }
 
 function updateButtons() {
   prevBtn.disabled = currentQuestionIndex === 0;
-  nextBtn.disabled = currentQuestionIndex === questions.length - 1 && !answeredQuestions[currentQuestionIndex] && remainingTime > 0;
+  nextBtn.disabled = currentQuestionIndex === questions.length - 1 && answeredQuestions[currentQuestionIndex];
 
   if (currentQuestionIndex === questions.length - 1) {
-    if (answeredQuestions[currentQuestionIndex] || remainingTime <= 0) {
-      nextBtn.innerHTML = 'Finish <i class="bi bi-trophy-fill ms-2"></i>';
-      nextBtn.classList.add("finish-btn");
-      nextBtn.disabled = false;
-    } else {
-      nextBtn.innerHTML = 'Next <i class="bi bi-arrow-right ms-2"></i>';
-      nextBtn.classList.remove("finish-btn");
-    }
+    nextBtn.innerHTML = 'Finish <i class="bi bi-trophy-fill ms-2"></i>';
+    nextBtn.classList.add("finish-btn");
+    nextBtn.disabled = false;
   } else {
     nextBtn.innerHTML = 'Next <i class="bi bi-arrow-right ms-2"></i>';
     nextBtn.classList.remove("finish-btn");
   }
 
-  // Mengatur kelas dan atribut disabled untuk konsistensi visual
   [prevBtn, nextBtn].forEach(btn => {
-    if (btn.disabled) {
-      btn.classList.add("disabled");
-    } else {
-      btn.classList.remove("disabled");
-    }
+    btn.classList.toggle("disabled", btn.disabled);
   });
 }
 
-function showNextQuestion() {
-  // Animasi fade-out sebelum pindah ke soal berikutnya
-  questionContainer.classList.add("fade-out");
-  setTimeout(() => {
-    currentQuestionIndex++;
-    displayQuestion();
-    displayQuestionNumbers();
-    questionContainer.classList.remove("fade-out");
-  }, 500);
-}
-
-function showPreviousQuestion() {
-  stopTimer();
-  // Animasi fade-out sebelum pindah ke soal sebelumnya
-  questionContainer.classList.add("fade-out");
-  setTimeout(() => {
-    currentQuestionIndex--;
-    displayQuestion();
-    displayQuestionNumbers();
-    questionContainer.classList.remove("fade-out");
-  }, 500);
-}
-
-function showFinalScore() {
-  const finalScoreElement = document.getElementById("finalScore");
-  const finalMessageElement = document.getElementById("finalMessage");
-  const trophyImage = document.querySelector(".trophy-image");
- 
-  finalScoreElement.textContent = `${score} / ${questions.length}`;
- 
-  let message = "";
-  const percentage = (score / questions.length) * 100;
-  if (percentage === 100) {
-    message = "Sempurna! Kamu jenius matematika! 🌟";
-    trophyImage.src = "/imk-v1/assets/gold-trophy.svg";
-  } else if (percentage >= 80) {
-    message = "Luar biasa! Terus berlatih ya! 😄";
-    trophyImage.src = "/imk-v1/assets/gold-trophy.svg";
-  } else if (percentage >= 60) {
-    message = "Bagus! Kamu sudah hampir menguasainya! 👍";
-    trophyImage.src = "/imk-v1/assets/gold-trophy.svg";
+function handleFinishClick() {
+  if (allQuestionsAnswered()) {
+    showFinalScore();
   } else {
-    message = "Jangan menyerah, terus belajar! 💪";
-    trophyImage.src = "/imk-v1/assets/gold-trophy.svg";
+    const unansweredQuestions = answeredQuestions.reduce((acc, answered, index) => {
+      if (!answered) acc.push(index + 1);
+      return acc;
+    }, []);
+
+    const message = `Harap jawab soal nomor ${unansweredQuestions.join(', ')} sebelum menyelesaikan kuis.`;
+    showWarning(message);
+
+    nextBtn.classList.add('shake-animation');
+    setTimeout(() => nextBtn.classList.remove('shake-animation'), 500);
   }
- 
-  finalMessageElement.textContent = message;
-  playSound("finish");
-  scoreModal.show();
+}
+
+// Fungsi Navigasi
+async function showNextQuestion() {
+  questionContainer.classList.add("fade-out");
+  await new Promise(resolve => {
+    setTimeout(() => {
+      stopTimer(currentQuestionIndex);
+      currentQuestionIndex++;
+      displayQuestion();
+      displayQuestionNumbers();
+      questionContainer.classList.remove("fade-out");
+      resolve();
+    }, 500);
+  });
+}
+
+async function showPreviousQuestion() {
+  questionContainer.classList.add("fade-out");
+  await new Promise(resolve => {
+    setTimeout(() => {
+      stopTimer(currentQuestionIndex);
+      currentQuestionIndex--;
+      displayQuestion();
+      displayQuestionNumbers();
+      questionContainer.classList.remove("fade-out");
+      resolve();
+    }, 500);
+  });
+}
+
+function goToQuestion(index) {
+  if (index !== currentQuestionIndex) {
+    stopTimer(currentQuestionIndex);
+    currentQuestionIndex = index;
+    displayQuestion();
+    displayQuestionNumbers();
+    if (answeredQuestions[index]) {
+      const timerBar = document.querySelector('.timer-bar');
+      timerBar.style.width = '100%';
+      timerBar.classList.remove('timer-animation');
+    } else {
+      initTimer(currentQuestionIndex);
+    }
+  }
+}
+
+// Fungsi Timer
+function initTimer(questionIndex) {
+  questionTimers[questionIndex] = {
+    remainingTime: 30000, // 30 detik
+    isPaused: false,
+  };
+  const timerBar = document.querySelector('.timer-bar');
+  timerBar.style.width = '100%';
+  timerBar.classList.add('timer-animation', 'smooth-transition');
+  timerBar.classList.remove('time-warning', 'warning-pulse');
+  animationFrameId = requestAnimationFrame(updateTimer);
+}
+
+let animationFrameId = null;
+let lastTimestamp = null;
+
+function updateTimer(timestamp) {
+  if (!lastTimestamp) {
+    lastTimestamp = timestamp;
+  }
+
+  for (let i = 0; i < questions.length; i++) {
+    if (i === currentQuestionIndex && !questionTimers[i].isPaused) {
+      const elapsedTime = timestamp - lastTimestamp;
+      questionTimers[i].remainingTime -= elapsedTime;
+
+      const progress = (questionTimers[i].remainingTime / 30000) * 100;
+      const timerBar = document.querySelector('.timer-bar');
+      timerBar.style.width = `${progress}%`;
+
+      if (questionTimers[i].remainingTime <= 0) {
+        stopTimer(i);
+        answeredQuestions[i] = true;
+        updateButtons();
+        displayQuestionNumbers();
+        if (i < questions.length - 1) {
+          setTimeout(() => showNextQuestion(), 0);
+        } else {
+          updateButtons();
+          setTimeout(() => showFinalScore(), 500);
+        }
+        break;
+      }
+
+      if (questionTimers[i].remainingTime <= 10000 && !timerBar.classList.contains('time-warning')) {
+        timerBar.classList.add('time-warning', 'warning-pulse');
+        playSound("tick");
+      } else if (questionTimers[i].remainingTime > 10000) {
+        timerBar.classList.remove('time-warning', 'warning-pulse');
+      }
+    }
+  }
+
+  lastTimestamp = timestamp;
+  animationFrameId = requestAnimationFrame(updateTimer);
+}
+
+function stopTimer(questionIndex) {
+  questionTimers[questionIndex].isPaused = true;
+}
+
+// Fungsi Utilitas
+function playSound(type) {
+  const audio = new Audio(`/imk-v1/assets/sound/${type}.wav`);
+  audio.play().catch(error => {
+    console.error(`Error playing sound: ${type}`, error);
+  });
 }
 
 function restartQuiz() {
@@ -309,98 +456,11 @@ function restartQuiz() {
   answeredQuestions.fill(false);
   selectedAnswers.fill(null);
   scoreModal.hide();
- 
+
   const quizCard = document.querySelector('.quiz-card');
   quizCard.classList.add('restart-animation');
   setTimeout(() => {
     displayQuestion();
     quizCard.classList.remove('restart-animation');
   }, 500);
-}  
-
-function playSound(type) {
-  const audio = new Audio(`/imk-v1/assets/sound/${type}.wav`);
-  audio.play().catch(error => {
-    console.error(`Error playing sound: ${type}`, error);
-  });
 }
-
-function startTimer() {
-  const timerBar = document.querySelector('.timer-bar');
-  timerBar.style.width = '100%';
-  timerBar.style.left = '0';
-  
-  if (!isPaused) {
-    remainingTime = remainingTimes[currentQuestionIndex];
-  }
-
-  const startTime = Date.now();
-  timerInterval = setInterval(() => {
-    if (!isPaused) {
-      const elapsedTime = Date.now() - startTime;
-      const currentTime = remainingTime - elapsedTime;
-
-      if (currentTime <= 0) {
-        stopTimer();
-        answeredQuestions[currentQuestionIndex] = true;
-        updateButtons();
-        displayQuestionNumbers();
-        if (currentQuestionIndex < questions.length - 1) {
-          showNextQuestion();
-        } else {
-          showFinalScore();
-        }
-      } else {
-        const progress = (currentTime / timerDuration) * 100;
-        timerBar.style.width = `${progress}%`;
-        remainingTimes[currentQuestionIndex] = currentTime;
-      }
-    }
-  }, 100);
-}
-
-function stopTimer() {
-  clearInterval(timerInterval);
-  isPaused = true;
-}
-
-function resetTimer() {
-  stopTimer();
-  isPaused = false;
-  const timerBar = document.querySelector('.timer-bar');
-  timerBar.style.width = '100%';
-}
-
-
-function timerExpired() {
-  if (currentQuestionIndex < questions.length - 1) {
-    showNextQuestion();
-  } else {
-    showFinalScore();
-  }
-}
-
-prevBtn.addEventListener("click", showPreviousQuestion);
-nextBtn.addEventListener("click", () => {
-  if (currentQuestionIndex === questions.length - 1 && answeredQuestions[currentQuestionIndex]) {
-    showFinalScore();
-  } else {
-    showNextQuestion();
-  }
-});
-
-document.querySelector('.modal-footer .btn-primary').addEventListener('click', restartQuiz);
-
-document.body.insertAdjacentHTML('afterbegin', '<div class="loading"></div>');
-setTimeout(() => {
-  document.querySelector('.loading').remove();
-  displayQuestion();
-}, 1500);
-
-document.addEventListener("DOMContentLoaded", () => {
-  prevBtn.innerHTML = '<i class="bi bi-arrow-left me-2"></i> Prev';
-  nextBtn.innerHTML = 'Next <i class="bi bi-arrow-right ms-2"></i>';
-
-  displayQuestion();
-  displayQuestionNumbers();
-});
