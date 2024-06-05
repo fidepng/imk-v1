@@ -19,7 +19,7 @@
         "type": "image/png"
       },
       {
-        "src": "/imk-v1/asset/maskable-icon.png",
+        "src": "/imk-v1/assets/maskable-icon.png",
         "sizes": "512x512",
         "type": "image/png",
         "purpose": "maskable"
