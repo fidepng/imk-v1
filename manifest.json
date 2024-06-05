@@ -1,11 +1,11 @@
 {
-    "name": "Eduquest - Aplikasi Pembelajaran",
+    "name": "EduQuest - Aplikasi Pembelajaran",
     "short_name": "anya",
     "start_url": "/imk-v1/",
     "id": "/imk-v1/",
     "scope": "/imk-v1/",
     "display": "standalone",
-    "background_color": "#FFFFFFF",
+    "background_color": "#FFFFFF ",
     "theme_color": "#FFFFFF",
     "icons": [
       {
