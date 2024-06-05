@@ -1,4 +1,4 @@
-const cacheName = 'sw-v6';
+const cacheName = 'sw-v7';
 
 // Daftar file yang perlu di-cache
 const cacheFiles = [
