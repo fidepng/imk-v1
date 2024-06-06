@@ -1,98 +1,109 @@
 // accessibility.js
-document.addEventListener('DOMContentLoaded', () => {
-    const sidebar = document.getElementById('sidebar');
-  
-    // Load sidebar content
-    fetch('/imk-v1/components/sidebar.html')
-      .then(response => response.text())
-      .then(html => {
-        sidebar.innerHTML = html;
-        // Setup event listeners after sidebar content is loaded
-        setupAccessibilityFeatures();
-      })
-      .catch(error => {
-        console.error('Error loading sidebar:', error);
-      });
-  });
-  
-  function setupAccessibilityFeatures() {
-    const closeSidebar = document.getElementById('close-sidebar');
-    const fontSizeSelect = document.getElementById('font-size');
-    const highContrastToggle = document.getElementById('high-contrast');
-    const readAloudBtn = document.getElementById('read-aloud');
-    const dyslexiaFontToggle = document.getElementById('dyslexia-font');
-    const lightThemeBtn = document.getElementById('light-theme');
-    const darkThemeBtn = document.getElementById('dark-theme');
-  
-    if (closeSidebar) {
-      closeSidebar.addEventListener('click', () => {
-        sidebar.classList.remove('show');
-        document.querySelector('.content-wrapper').classList.remove('shift-left');
-        document.getElementById('menu-toggle').checked = false;
-      });
-    }
-  
-    if (fontSizeSelect) {
-      fontSizeSelect.addEventListener('change', (e) => {
-        document.body.style.fontSize = e.target.value;
-        localStorage.setItem('fontSize', e.target.value);
-      });
-      // Apply saved font size
-      const savedFontSize = localStorage.getItem('fontSize');
-      if (savedFontSize) {
-        fontSizeSelect.value = savedFontSize;
-        document.body.style.fontSize = savedFontSize;
+const accessibility = {
+  speechSynth: window.speechSynthesis,
+  focusableElements:
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+  currentFocusIndex: 0,
+  isEnabled: false,
+
+  init() {
+    this.addToggleToSidebar();
+    document.addEventListener("keydown", this.handleKeydown.bind(this));
+  },
+
+  addToggleToSidebar() {
+    const sidebarContent = document.querySelector(".sidebar-content");
+    const toggleHtml = `
+      <div class="form-check form-switch mb-3">
+        <input class="form-check-input" type="checkbox" id="accessibilityToggle">
+        <label class="form-check-label" for="accessibilityToggle">Mode Aksesibilitas</label>
+      </div>
+    `;
+    sidebarContent.insertAdjacentHTML("afterbegin", toggleHtml);
+
+    const toggle = document.getElementById("accessibilityToggle");
+    toggle.addEventListener("change", (e) => {
+      this.isEnabled = e.target.checked;
+      if (this.isEnabled) {
+        this.speakText(
+          "Mode aksesibilitas diaktifkan. Gunakan tombol Tab untuk bernavigasi dan Enter untuk memilih."
+        );
+      } else {
+        this.speakText("Mode aksesibilitas dinonaktifkan.");
       }
+    });
+  },
+
+  handleKeydown(e) {
+    if (!this.isEnabled) return;
+
+    switch (e.key) {
+      case "Tab":
+        e.preventDefault();
+        this.navigateFocus(e.shiftKey ? -1 : 1);
+        break;
+      case "Enter":
+        this.activateCurrentElement();
+        break;
     }
-  
-    if (highContrastToggle) {
-      highContrastToggle.addEventListener('change', (e) => {
-        document.body.classList.toggle('high-contrast', e.target.checked);
-        localStorage.setItem('highContrast', e.target.checked);
-      });
-      // Apply saved high contrast setting
-      const savedHighContrast = localStorage.getItem('highContrast') === 'true';
-      highContrastToggle.checked = savedHighContrast;
-      document.body.classList.toggle('high-contrast', savedHighContrast);
+  },
+
+  navigateFocus(direction) {
+    const focusableElements = Array.from(
+      document.querySelectorAll(this.focusableElements)
+    ).filter((el) => !el.disabled && el.offsetParent !== null);
+
+    this.currentFocusIndex =
+      (this.currentFocusIndex + direction + focusableElements.length) %
+      focusableElements.length;
+    const targetElement = focusableElements[this.currentFocusIndex];
+    targetElement.focus();
+    this.speakText(this.getElementDescription(targetElement));
+    this.addFocusIndicator(targetElement);
+  },
+
+  activateCurrentElement() {
+    const element = document.activeElement;
+    if (element.click) {
+      element.click();
+    } else if (element.type === "checkbox") {
+      element.checked = !element.checked;
+      element.dispatchEvent(new Event("change", { bubbles: true }));
     }
-  
-    if (readAloudBtn) {
-      readAloudBtn.addEventListener('click', () => {
-        const text = document.querySelector('.menu-container h1').textContent + ' ';
-        document.querySelectorAll('.menu-card-title, .menu-card-text').forEach(el => {
-          text += el.textContent + ' ';
-        });
-        const utterance = new SpeechSynthesisUtterance(text);
-        window.speechSynthesis.speak(utterance);
-      });
+  },
+
+  getElementDescription(element) {
+    let text = "";
+    if (element.getAttribute("aria-label")) {
+      text = element.getAttribute("aria-label");
+    } else if (element.title) {
+      text = element.title;
+    } else if (element.placeholder) {
+      text = `Input dengan placeholder: ${element.placeholder}`;
+    } else if (element.textContent.trim()) {
+      text = element.textContent.trim();
+    } else {
+      text = `${element.tagName.toLowerCase()} yang tidak berlabel`;
     }
-  
-    if (dyslexiaFontToggle) {
-      dyslexiaFontToggle.addEventListener('change', (e) => {
-        document.body.classList.toggle('dyslexia-font', e.target.checked);
-        localStorage.setItem('dyslexiaFont', e.target.checked);
-      });
-      // Apply saved dyslexia font setting
-      const savedDyslexiaFont = localStorage.getItem('dyslexiaFont') === 'true';
-      dyslexiaFontToggle.checked = savedDyslexiaFont;
-      document.body.classList.toggle('dyslexia-font', savedDyslexiaFont);
-    }
-  
-    if (lightThemeBtn && darkThemeBtn) {
-      lightThemeBtn.addEventListener('click', () => {
-        document.body.classList.remove('dark-mode');
-        localStorage.setItem('darkMode', 'false');
-      });
-  
-      darkThemeBtn.addEventListener('click', () => {
-        document.body.classList.add('dark-mode');
-        localStorage.setItem('darkMode', 'true');
-      });
-  
-      // Apply saved theme
-      const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-      if (savedDarkMode) {
-        document.body.classList.add('dark-mode');
-      }
-    }
-  }
+    return text;
+  },
+
+  speakText(text) {
+    if (!this.isEnabled || !this.speechSynth) return;
+
+    this.speechSynth.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "id-ID";
+    this.speechSynth.speak(utterance);
+  },
+
+  addFocusIndicator(element) {
+    const focusedElements = document.querySelectorAll(".focused");
+    focusedElements.forEach((el) => el.classList.remove("focused"));
+    element.classList.add("focused");
+  },
+};
+
+document.addEventListener("DOMContentLoaded", () => accessibility.init());
+
+export default accessibility;

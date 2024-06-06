@@ -1,9 +1,13 @@
 /* menu.css */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
 
 body {
-  font-family: 'Poppins', sans-serif;
-  overflow-x: hidden; /* Mencegah scroll horizontal */
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
+  background-image: url("/imk-v1/assets/body-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .hidden {
@@ -24,50 +28,77 @@ body {
   cursor: pointer;
 }
 
-.setting-btn input {
+.settings-icon {
+  transition: transform 0.3s ease-in-out;
+}
+
+.settings-icon.rotate-open {
+  transform: rotate(180deg);
+}
+
+.settings-icon.rotate-close {
+  transform: rotate(0deg);
+}
+
+/* Styles untuk sidebar/dropdown menu */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -300px; /* Posisi awal di luar layar */
+  width: 300px;
+  height: 100vh;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 998;
+  overflow-y: auto;
+}
+
+.sidebar.open {
+  right: 0; /* Posisi saat sidebar terbuka */
+}
+
+.sidebar-header {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.sidebar-content {
+  padding: 20px;
+}
+
+/* Styles untuk overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 997;
   display: none;
 }
 
-/* Animasi untuk tombol setting */
-.setting-btn img {
-  height: 3em;
-  transition: transform 0.3s ease;
+.overlay.show {
+  display: block;
 }
 
-.setting-btn input:checked + img {
-  transform: rotate(360deg);
+/* Styles untuk indikator fokus */
+.focused {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
 }
 
-.content-wrapper {
-  transition: transform 0.3s ease;
-  position: relative; /* Tambahkan ini */
-}
-
-.content-wrapper.shift-left {
-  transform: translateX(-300px);
-}
-
+/* Styles untuk konten menu */
 .menu-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-image: url('/imk-v1/assets/body-bg.jpg');
-  background-size: cover;
-  background-position: center;
   padding: 2rem;
   position: relative;
-}
-
-.menu-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
 }
 
 .title {

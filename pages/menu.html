@@ -1,54 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Menu</title>
-  <link href="/imk-v1/assets/bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/imk-v1/styles/menu.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="shortcut icon" href="#">
-  <link rel="manifest" href="/imk-v1/manifest.json">
-  <meta name="theme-color" content="#FFFFFF">
-</head>
-<body>
-  <!-- Tombol Setting dengan Ikon setting -->
-  <label class="setting-btn" aria-label="Buka menu pengaturan">
-    <input type="checkbox" id="menu-toggle" aria-hidden="true">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings" aria-hidden="true">
-      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-      <circle cx="12" cy="12" r="3"/>
-    </svg>
-  </label>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Menu</title>
+    <link
+      href="/imk-v1/assets/bootstrap-5.3.3-dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/imk-v1/styles/menu.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="shortcut icon" href="#" />
+    <link rel="manifest" href="/imk-v1/manifest.json" />
+    <meta name="theme-color" content="#FFFFFF" />
+    <script type="module">
+      import accessibility from "/imk-v1/scripts/accessibility.js";
+    </script>
+  </head>
+  <body>
+    <button
+      class="setting-btn"
+      aria-label="Buka Menu Pengaturan"
+      aria-expanded="false"
+      aria-controls="sidebar"
+      role="button"
+    >
+      <img
+        src="/imk-v1/assets/settings.svg"
+        alt="Ikon Pengaturan"
+        class="settings-icon"
+      />
+    </button>
 
-  <div class="content-wrapper">
-    <div class="menu-container">
-      <h1 class="title">Pilih Subjek</h1>
-      <div class="menu-grid">
-        <a href="/imk-v1/pages/math-quiz.html" class="menu-card" aria-label="Kuis Matematika">
-          <div class="card-image-container">
-            <img src="/imk-v1/assets/blurry-gradient-haikei.svg" alt="Matematika" class="card-image">
-          </div>
-          <div class="menu-card-body">
-            <h5 class="menu-card-title">Matematika</h5>
-            <p class="menu-card-text">Kuis matematika sederhana untuk anak-anak sekolah dasar.</p>
-          </div>
-        </a>
-        <a href="/imk-v1/pages/common-knowledge-quiz.html" class="menu-card" aria-label="Kuis Pengetahuan Umum">
-          <div class="card-image-container">
-            <img src="/imk-v1/assets/blurry-gradient-haikei.svg" alt="Pengetahuan Umum" class="card-image">
-          </div>
-          <div class="menu-card-body">
-            <h5 class="menu-card-title">Pengetahuan Umum</h5>
-            <p class="menu-card-text">Tebak gambar dan jawab pertanyaan pengetahuan umum.</p>
-          </div>
-        </a>
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h5>Menu Pengaturan</h5>
+      </div>
+      <div class="sidebar-content">
+        <!-- Isi konten sidebar di sini -->
       </div>
     </div>
-  </div>
+    <div class="overlay"></div>
 
-  <script src="/imk-v1/assets/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <div class="content-wrapper">
+      <div class="menu-container">
+        <h1 class="title">Pilih Subjek</h1>
+        <div class="menu-grid">
+          <a
+            href="/imk-v1/pages/math-quiz.html"
+            class="menu-card"
+            aria-label="Kuis Matematika"
+          >
+            <div class="card-image-container">
+              <img
+                src="/imk-v1/assets/blurry-gradient-haikei.svg"
+                alt="Matematika"
+                class="card-image"
+              />
+            </div>
+            <div class="menu-card-body">
+              <h5 class="menu-card-title">Matematika</h5>
+              <p class="menu-card-text">
+                Kuis matematika sederhana untuk anak-anak sekolah dasar.
+              </p>
+            </div>
+          </a>
+          <a
+            href="/imk-v1/pages/common-knowledge-quiz.html"
+            class="menu-card"
+            aria-label="Kuis Pengetahuan Umum"
+          >
+            <div class="card-image-container">
+              <img
+                src="/imk-v1/assets/blurry-gradient-haikei.svg"
+                alt="Pengetahuan Umum"
+                class="card-image"
+              />
+            </div>
+            <div class="menu-card-body">
+              <h5 class="menu-card-title">Pengetahuan Umum</h5>
+              <p class="menu-card-text">
+                Tebak gambar dan jawab pertanyaan pengetahuan umum.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <script src="/imk-v1/assets/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+    <script defer>
+      // Kode untuk sidebar
+      function initSidebar() {
+        const settingBtn = document.querySelector(".setting-btn");
+        const sidebar = document.querySelector(".sidebar");
+        const overlay = document.querySelector(".overlay");
+        const settingsIcon = document.querySelector(".settings-icon");
+
+        if (!settingBtn || !sidebar || !overlay || !settingsIcon) {
+          console.error(
+            "Elemen tidak ditemukan. Sidebar tidak dapat diinisialisasi."
+          );
+          return;
+        }
+
+        settingBtn.addEventListener("click", toggleSidebar);
+
+        function toggleSidebar() {
+          const isExpanded =
+            settingBtn.getAttribute("aria-expanded") === "true";
+          settingBtn.setAttribute("aria-expanded", !isExpanded);
+          sidebar.setAttribute("aria-hidden", isExpanded);
+          sidebar.classList.toggle("open", !isExpanded);
+          overlay.classList.toggle("show", !isExpanded);
+
+          if (!isExpanded) {
+            settingsIcon.classList.remove("rotate-close");
+            settingsIcon.classList.add("rotate-open");
+          } else {
+            settingsIcon.classList.remove("rotate-open");
+            settingsIcon.classList.add("rotate-close");
+          }
+        }
+
+        document.addEventListener("click", (event) => {
+          const isOutsideSidebar =
+            !sidebar.contains(event.target) &&
+            !settingBtn.contains(event.target);
+          if (isOutsideSidebar && sidebar.classList.contains("open")) {
+            settingBtn.setAttribute("aria-expanded", "false");
+            sidebar.setAttribute("aria-hidden", "true");
+            sidebar.classList.remove("open");
+            overlay.classList.remove("show");
+            settingsIcon.classList.remove("rotate-open");
+            settingsIcon.classList.add("rotate-close");
+          }
+        });
+
+        // Tambahkan penanganan peristiwa sentuh
+        sidebar.addEventListener("touchstart", handleTouchStart, {
+          passive: true,
+        });
+        sidebar.addEventListener("touchmove", handleTouchMove, {
+          passive: false,
+        });
+        sidebar.addEventListener("touchend", handleTouchEnd);
+
+        function handleTouchStart(e) {
+          touchStartX = e.touches[0].clientX;
+        }
+
+        function handleTouchMove(e) {
+          if (!sidebar.classList.contains("open")) return;
+          touchEndX = e.touches[0].clientX;
+          const touchDiff = touchStartX - touchEndX;
+          const sidebarWidth = sidebar.offsetWidth;
+
+          if (touchDiff > 0 && touchDiff < sidebarWidth / 2) {
+            sidebar.style.transform = `translateX(-${touchDiff}px)`;
+          }
+        }
+
+        function handleTouchEnd() {
+          if (!sidebar.classList.contains("open")) return;
+          const touchDiff = touchStartX - touchEndX;
+          const sidebarWidth = sidebar.offsetWidth;
+
+          if (touchDiff > sidebarWidth / 3) {
+            // Tutup sidebar
+            settingBtn.setAttribute("aria-expanded", "false");
+            sidebar.setAttribute("aria-hidden", "true");
+            sidebar.classList.remove("open");
+            overlay.classList.remove("show");
+            settingsIcon.classList.remove("rotate-open");
+            settingsIcon.classList.add("rotate-close");
+            sidebar.style.transform = "";
+          } else {
+            // Buka sidebar
+            sidebar.style.transform = "";
+          }
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initSidebar();
+      });
+    </script>
+  </body>
 </html>
